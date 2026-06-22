@@ -82,7 +82,7 @@ export default function ClientsClient({ initialClients }: Props) {
             <Plus className="w-3.5 h-3.5" /> New Client
           </button>
         </div>
-        <DataTable columns={columns} data={clients as unknown as Record<string, unknown>[]} onRowClick={(r) => openEdit(r as unknown as Client)} emptyTitle="No clients" />
+        <DataTable columns={columns} data={clients} onRowClick={(r) => openEdit(r as unknown as Client)} emptyTitle="No clients" />
       </div>
 
       {showModal && (

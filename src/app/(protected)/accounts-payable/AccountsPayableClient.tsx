@@ -114,7 +114,7 @@ export default function AccountsPayableClient({ initialRecords, invoices }: Prop
             <Plus className="w-3.5 h-3.5" /> New AP Record
           </button>
         </div>
-        <DataTable columns={columns} data={filtered as unknown as Record<string, unknown>[]} onRowClick={(r) => openEdit(r as unknown as AccountsPayableRecord)} emptyTitle="No AP records" />
+        <DataTable columns={columns} data={filtered} onRowClick={(r) => openEdit(r as unknown as AccountsPayableRecord)} emptyTitle="No AP records" />
       </div>
 
       {showModal && (

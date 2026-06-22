@@ -110,7 +110,7 @@ export default function PeopleClient({ initialEmployees }: Props) {
             <Plus className="w-3.5 h-3.5" /> New Employee
           </button>
         </div>
-        <DataTable columns={columns} data={filtered as unknown as Record<string, unknown>[]} onRowClick={(r) => openEdit(r as unknown as Employee)} emptyTitle="No employees" />
+        <DataTable columns={columns} data={filtered} onRowClick={(r) => openEdit(r as unknown as Employee)} emptyTitle="No employees" />
       </div>
 
       {showModal && (

@@ -158,7 +158,7 @@ export default function InvoiceConversionClient({ initialInvoices }: Props) {
             <Plus className="w-3.5 h-3.5" /> New Invoice
           </button>
         </div>
-        <DataTable columns={columns} data={filtered as unknown as Record<string, unknown>[]} onRowClick={(r) => openEdit(r as unknown as InvoiceRecord)} emptyTitle="No invoices yet" emptyDescription="Click 'New Invoice' to add your first record." />
+        <DataTable columns={columns} data={filtered} onRowClick={(r) => openEdit(r as unknown as InvoiceRecord)} emptyTitle="No invoices yet" emptyDescription="Click 'New Invoice' to add your first record." />
       </div>
 
       {showModal && (

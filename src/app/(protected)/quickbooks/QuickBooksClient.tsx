@@ -115,7 +115,7 @@ export default function QuickBooksClient({ initialRecords, invoices, apRecords }
             <Plus className="w-3.5 h-3.5" /> New QB Record
           </button>
         </div>
-        <DataTable columns={columns} data={filtered as unknown as Record<string, unknown>[]} onRowClick={(r) => openEdit(r as unknown as QuickBooksRecord)} emptyTitle="No QuickBooks records" />
+        <DataTable columns={columns} data={filtered} onRowClick={(r) => openEdit(r as unknown as QuickBooksRecord)} emptyTitle="No QuickBooks records" />
       </div>
 
       {showModal && (

@@ -17,17 +17,17 @@ export interface Column<T> {
 interface Props<T> {
   columns: Column<T>[]
   data: T[]
-  keyField?: string
+  keyField?: keyof T
   emptyTitle?: string
   emptyDescription?: string
   onRowClick?: (row: T) => void
   className?: string
 }
 
-export function DataTable<T extends Record<string, unknown>>({
+export function DataTable<T extends { id?: unknown }>({
   columns,
   data,
-  keyField = 'id',
+  keyField = 'id' as keyof T,
   emptyTitle = 'No records',
   emptyDescription,
   onRowClick,
@@ -47,8 +47,8 @@ export function DataTable<T extends Record<string, unknown>>({
 
   const sorted = sortKey
     ? [...data].sort((a, b) => {
-        const av = a[sortKey]
-        const bv = b[sortKey]
+        const av = (a as Record<string, unknown>)[sortKey]
+        const bv = (b as Record<string, unknown>)[sortKey]
         if (av == null && bv == null) return 0
         if (av == null) return 1
         if (bv == null) return -1
@@ -92,7 +92,7 @@ export function DataTable<T extends Record<string, unknown>>({
         <tbody className="bg-white divide-y divide-gray-100">
           {sorted.map((row, i) => (
             <tr
-              key={String(row[keyField] ?? i)}
+              key={String((row as Record<string, unknown>)[String(keyField)] ?? i)}
               className={cn(
                 'hover:bg-gray-50 transition-colors',
                 onRowClick && 'cursor-pointer'
@@ -104,7 +104,9 @@ export function DataTable<T extends Record<string, unknown>>({
                   key={col.key}
                   className={cn('px-3 py-2 text-gray-700 whitespace-nowrap', col.className)}
                 >
-                  {col.render ? col.render(row) : String(row[col.key] ?? '—')}
+                  {col.render
+                    ? col.render(row)
+                    : String((row as Record<string, unknown>)[col.key] ?? '—')}
                 </td>
               ))}
             </tr>
