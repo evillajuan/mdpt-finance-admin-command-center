@@ -83,9 +83,9 @@ export default function PayrollRunDetailClient({ runId, initialEntries }: Props)
       const payload = { ...calced, updated_at: new Date().toISOString() }
 
       if (editing) {
-        const { data, err } = await supabase.from('payroll_entries').update(payload).eq('id', editing.id).select().single() as { data: PayrollEntry; err: unknown }
-        if (err) throw err
-        setEntries((prev) => prev.map((e) => e.id === editing.id ? data : e))
+        const { data, error: updateErr } = await supabase.from('payroll_entries').update(payload).eq('id', editing.id).select().single()
+        if (updateErr) throw updateErr
+        setEntries((prev) => prev.map((e) => e.id === editing.id ? (data as PayrollEntry) : e))
       } else {
         const { data, error: e } = await supabase.from('payroll_entries').insert(payload).select().single()
         if (e) throw e
