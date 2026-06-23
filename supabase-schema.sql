@@ -287,6 +287,24 @@ create policy "auth update import_history" on import_history for update to authe
 create policy "auth delete import_history" on import_history for delete to authenticated using (true);
 
 -- ─────────────────────────────────────────────
+-- Grants: allow authenticated/anon roles to use tables
+-- ─────────────────────────────────────────────
+
+grant usage on schema public to authenticated, anon;
+
+grant select, insert, update, delete on
+  employees, clients, client_locations, invoice_records, accounts_payable_records,
+  quickbooks_records, payroll_runs, payroll_entries, settings_reference_values, import_history
+to authenticated;
+
+grant select on
+  employees, clients, client_locations, invoice_records, accounts_payable_records,
+  quickbooks_records, payroll_runs, payroll_entries, settings_reference_values, import_history
+to anon;
+
+grant usage, select on all sequences in schema public to authenticated, anon;
+
+-- ─────────────────────────────────────────────
 -- Storage
 -- ─────────────────────────────────────────────
 -- After running this SQL:
