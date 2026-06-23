@@ -16,8 +16,8 @@ import { cn } from '@/lib/utils'
 
 const nav = [
   { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { label: 'Invoice Conversion', href: '/invoice-conversion', icon: FileText },
-  { label: 'Accounts Receivable', href: '/accounts-payable', icon: CreditCard },
+  { label: 'Invoice Editor', href: '/invoice-editor', icon: FileText },
+  { label: 'Accounts Payable', href: '/accounts-payable', icon: CreditCard },
   { label: 'QuickBooks Tracker', href: '/quickbooks', icon: BookOpen },
   { label: 'Payroll Runs', href: '/payroll-runs', icon: Briefcase },
   { label: 'People', href: '/people', icon: Users },

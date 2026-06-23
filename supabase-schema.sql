@@ -300,3 +300,46 @@ create policy "auth delete import_history" on import_history for delete to authe
 --    Target roles: authenticated
 --    USING expression: true
 --    WITH CHECK expression: true
+
+-- ─────────────────────────────────────────────
+-- Invoice Editor: Billing Profiles & Client Locations
+-- Run these in the Supabase SQL Editor
+-- ─────────────────────────────────────────────
+
+create table if not exists invoice_profiles (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now(),
+  name text not null,
+  website text,
+  phone text,
+  email text,
+  remit_email text,
+  addr1 text,
+  city text,
+  state text,
+  zip text,
+  is_default boolean default false
+);
+
+create table if not exists invoice_client_locations (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamptz default now(),
+  client_id uuid references clients(id) on delete cascade,
+  label text not null,
+  line1 text not null,
+  line2 text
+);
+
+-- RLS
+alter table invoice_profiles enable row level security;
+alter table invoice_client_locations enable row level security;
+
+create policy "auth select invoice_profiles" on invoice_profiles for select to authenticated using (true);
+create policy "auth insert invoice_profiles" on invoice_profiles for insert to authenticated with check (true);
+create policy "auth update invoice_profiles" on invoice_profiles for update to authenticated using (true) with check (true);
+create policy "auth delete invoice_profiles" on invoice_profiles for delete to authenticated using (true);
+
+create policy "auth select invoice_client_locations" on invoice_client_locations for select to authenticated using (true);
+create policy "auth insert invoice_client_locations" on invoice_client_locations for insert to authenticated with check (true);
+create policy "auth delete invoice_client_locations" on invoice_client_locations for delete to authenticated using (true);

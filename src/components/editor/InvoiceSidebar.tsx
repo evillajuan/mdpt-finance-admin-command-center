@@ -1,0 +1,65 @@
+'use client'
+import type { Invoice } from './EditorView'
+
+export default function InvoiceSidebar({
+  items, activeId, setActiveId, selectedIds, setSelectedIds, add, remove,
+}: {
+  items: Invoice[]
+  activeId?: string
+  setActiveId: (x: string) => void
+  selectedIds: Set<string>
+  setSelectedIds: (fn: (s: Set<string>) => Set<string>) => void
+  add: (f: File[]) => void
+  remove: (x: string) => void
+}) {
+  const allChecked = items.length > 0 && items.every(i => selectedIds.has(i.id))
+  const someChecked = items.some(i => selectedIds.has(i.id))
+  const toggleAll = () => {
+    if (allChecked) setSelectedIds(() => new Set())
+    else setSelectedIds(() => new Set(items.map(i => i.id)))
+  }
+  const toggle = (id: string) => setSelectedIds(s => { const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n })
+
+  return (
+    <aside className="editor-pane flex flex-col min-h-0">
+      <label
+        className="m-3 border border-dashed border-[var(--e-rule2)] bg-[var(--e-stone)] py-5 px-3 text-center cursor-pointer block"
+        onDragOver={e => e.preventDefault()}
+        onDrop={e => { e.preventDefault(); add(Array.from(e.dataTransfer.files)) }}
+      >
+        <div className="text-xl mb-1">⇧</div>
+        <b className="text-[11px]">Drop PDF invoices</b>
+        <div className="text-[10px] text-[var(--e-ash)] mt-1">or click to browse · multiple allowed</div>
+        <input className="hidden" type="file" accept="application/pdf" multiple onChange={e => add(Array.from(e.target.files || []))} />
+      </label>
+      <div className="editor-section-title mx-3 mb-0 mt-2 flex items-center gap-2">
+        <label className="flex items-center gap-1 cursor-pointer" onClick={e => e.stopPropagation()}>
+          <input
+            type="checkbox"
+            className="w-auto"
+            checked={allChecked}
+            ref={el => { if (el) el.indeterminate = someChecked && !allChecked }}
+            onChange={toggleAll}
+          />
+        </label>
+        Invoice Queue <span className="editor-mono ml-auto">{items.length}</span>
+      </div>
+      <div className="editor-scroll flex-1">
+        {items.length ? items.map(i => (
+          <div key={i.id} className={`editor-list-row flex items-start gap-2 ${activeId === i.id ? 'active' : ''}`}>
+            <label className="flex items-center pt-[2px] cursor-pointer" onClick={e => e.stopPropagation()}>
+              <input type="checkbox" className="w-auto" checked={selectedIds.has(i.id)} onChange={() => toggle(i.id)} />
+            </label>
+            <button onClick={() => setActiveId(i.id)} className="flex-1 min-w-0 text-left bg-transparent border-0 p-0">
+              <div className="editor-mono text-[10px] truncate pr-7">{i.name}</div>
+              <span className={`editor-badge inline-block mt-2 ${i.edited ? 'text-[var(--e-success)]' : ''}`}>{i.edited ? 'Ready' : 'Pending'}</span>
+            </button>
+            <span role="button" className="editor-hover-x text-[var(--e-danger)]" onClick={e => { e.stopPropagation(); remove(i.id) }}>×</span>
+          </div>
+        )) : (
+          <div className="p-6 text-center italic text-[var(--e-ash)] text-[11px]">No invoices in the queue.</div>
+        )}
+      </div>
+    </aside>
+  )
+}
