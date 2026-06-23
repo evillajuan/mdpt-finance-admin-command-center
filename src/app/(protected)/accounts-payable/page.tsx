@@ -12,7 +12,7 @@ export default async function AccountsPayablePage() {
 
   return (
     <div>
-      <PageHeader title="Accounts Payable" subtitle="Track invoices added to Asana AP project" />
+      <PageHeader title="Accounts Receivable" subtitle="Track invoices added to Asana AP project" />
       <SectionCard>
         <AccountsPayableClient initialRecords={apRes.data ?? []} invoices={invRes.data ?? []} />
       </SectionCard>
