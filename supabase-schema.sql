@@ -38,7 +38,41 @@ create table if not exists clients (
   default_invoice_recipient text,
   default_work_state text,
   status text,
-  notes text
+  notes text,
+  -- Primary contact
+  primary_contact_name text,
+  primary_contact_title text,
+  primary_contact_email text,
+  primary_contact_phone text,
+  -- Billing contact
+  billing_contact_name text,
+  billing_contact_title text,
+  billing_contact_email text,
+  billing_contact_phone text
+);
+
+-- Migration: add contact columns if table already exists
+alter table clients add column if not exists primary_contact_name text;
+alter table clients add column if not exists primary_contact_title text;
+alter table clients add column if not exists primary_contact_email text;
+alter table clients add column if not exists primary_contact_phone text;
+alter table clients add column if not exists billing_contact_name text;
+alter table clients add column if not exists billing_contact_title text;
+alter table clients add column if not exists billing_contact_email text;
+alter table clients add column if not exists billing_contact_phone text;
+
+create table if not exists client_locations (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  client_id uuid not null references clients(id) on delete cascade,
+  location_type text,
+  label text,
+  address_line1 text,
+  address_line2 text,
+  city text,
+  state text,
+  zip text,
+  country text default 'US'
 );
 
 create table if not exists invoice_records (
@@ -185,6 +219,7 @@ alter table payroll_runs enable row level security;
 alter table payroll_entries enable row level security;
 alter table settings_reference_values enable row level security;
 alter table import_history enable row level security;
+alter table client_locations enable row level security;
 
 -- ─────────────────────────────────────────────
 -- Policies: authenticated users can read/write all tables
@@ -198,9 +233,16 @@ create policy "auth delete employees" on employees for delete to authenticated u
 
 -- clients
 create policy "auth select clients" on clients for select to authenticated using (true);
+
 create policy "auth insert clients" on clients for insert to authenticated with check (true);
 create policy "auth update clients" on clients for update to authenticated using (true) with check (true);
 create policy "auth delete clients" on clients for delete to authenticated using (true);
+
+-- client_locations
+create policy "auth select client_locations" on client_locations for select to authenticated using (true);
+create policy "auth insert client_locations" on client_locations for insert to authenticated with check (true);
+create policy "auth update client_locations" on client_locations for update to authenticated using (true) with check (true);
+create policy "auth delete client_locations" on client_locations for delete to authenticated using (true);
 
 -- invoice_records
 create policy "auth select invoice_records" on invoice_records for select to authenticated using (true);

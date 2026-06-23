@@ -9,7 +9,23 @@ html {
 }
 
 body {
-  @apply text-slate-800 antialiased;
+  @apply text-charcoal-900 antialiased bg-cream;
+}
+
+/* Refined scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #C4A96A40;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C4A96A80;
 }
 
 /* ── Invoice Editor: scoped CSS variables ── */
