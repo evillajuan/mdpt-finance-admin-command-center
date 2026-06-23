@@ -1,0 +1,117 @@
+'use client'
+import { useState } from 'react'
+import type { EditorClient, EditorProfile } from '@/lib/editor-types'
+import type { Invoice } from './EditorView'
+
+export type FormState = {
+  profileId: string
+  companyName: string
+  website: string
+  addr1: string
+  addr2: string
+  clientName: string
+  locationId: string
+  locLine1: string
+  locLine2: string
+  remitEmail: string
+}
+
+export const emptyForm: FormState = {
+  profileId: '', companyName: '', website: '', addr1: '', addr2: '',
+  clientName: '', locationId: '', locLine1: '', locLine2: '', remitEmail: '',
+}
+
+const Field = ({ label, ...p }: { label: string } & React.InputHTMLAttributes<HTMLInputElement>) => (
+  <label className="editor-field">
+    <span className="editor-label">{label}</span>
+    <input {...p} />
+  </label>
+)
+
+export default function InvoiceForm({
+  invoice, profiles, clients, update, multiSelected,
+}: {
+  invoice?: Invoice
+  profiles: EditorProfile[]
+  clients: EditorClient[]
+  update: (p: Partial<Invoice>) => void
+  multiSelected?: boolean
+}) {
+  const [adding, setAdding] = useState(false)
+  if (!invoice) return (
+    <section className="editor-empty min-h-0 bg-[var(--e-paper)]">
+      <div>
+        <div className="editor-icon">▧</div>
+        <p>No invoice selected</p>
+        <small>Choose an invoice from the queue.</small>
+      </div>
+    </section>
+  )
+  const f = invoice.form
+  const set = (p: Partial<FormState>) => update({ form: { ...f, ...p } })
+  const client = clients.find(c => c.id === invoice.clientId)
+
+  return (
+    <section className="editor-pane overflow-y-auto min-h-0 bg-[var(--e-paper)] p-4">
+      {multiSelected && (
+        <div className="mb-3 px-2 py-1 bg-[var(--e-brass-bg)] border border-[var(--e-brass)] text-[10px] text-[var(--e-brass)]">
+          Editing multiple — changes apply to all selected invoices
+        </div>
+      )}
+      <div className="editor-section-title">Company</div>
+      <div className="grid gap-3">
+        <label className="editor-field">
+          <span className="editor-label">Profile</span>
+          <select value={f.profileId} onChange={e => {
+            const p = profiles.find(x => x.id === e.target.value)
+            set(p ? {
+              profileId: p.id, companyName: p.name, website: p.website || '',
+              addr1: p.addr1 || '',
+              addr2: [p.city, p.state && p.zip ? `${p.state} ${p.zip}` : p.state || p.zip].filter(Boolean).join(', '),
+              remitEmail: p.remitEmail || '',
+            } : { profileId: '' })
+          }}>
+            <option value="">Custom</option>
+            {profiles.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+          </select>
+        </label>
+        <Field label="Company Name" value={f.companyName} onChange={e => set({ companyName: e.target.value })} />
+        <Field label="Website" value={f.website} onChange={e => set({ website: e.target.value })} />
+        <Field label="Address Line 1" value={f.addr1} onChange={e => set({ addr1: e.target.value })} />
+        <Field label="Address Line 2" value={f.addr2} onChange={e => set({ addr2: e.target.value })} />
+      </div>
+      <div className="editor-section-title mt-6">Bill To</div>
+      <div className="grid gap-3">
+        <label className="editor-field">
+          <span className="editor-label">Client</span>
+          <select value={invoice.clientId || ''} onChange={e => {
+            const c = clients.find(x => x.id === e.target.value)
+            update({ clientId: c?.id, form: { ...f, clientName: c?.name || '', locationId: '', locLine1: '', locLine2: '' } })
+          }}>
+            <option value="">Custom Client</option>
+            {clients.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+          </select>
+        </label>
+        <Field label="Client Name" value={f.clientName} onChange={e => update({ clientId: undefined, form: { ...f, clientName: e.target.value, locationId: '' } })} />
+        <div className="editor-label">Billing Location</div>
+        {client?.locations.map(l => (
+          <label key={l.id} className={`border p-2 cursor-pointer ${f.locationId === l.id ? 'border-[var(--e-brass)] bg-[var(--e-brass-bg)]' : 'border-[var(--e-rule)]'}`}>
+            <input className="w-auto mr-2" type="radio" name="loc" checked={f.locationId === l.id} onChange={() => set({ locationId: l.id, locLine1: l.line1, locLine2: l.line2 || '' })} />
+            <b className="text-[11px]">{l.label}</b>
+            <div className="ml-5 text-[10px] text-[var(--e-smoke)]">{l.line1}{l.line2 && <><br />{l.line2}</>}</div>
+          </label>
+        ))}
+        {(!client || adding) && (
+          <div className="border border-[var(--e-rule)] p-2 grid gap-2">
+            <Field label="Line 1" value={f.locLine1} onChange={e => set({ locLine1: e.target.value })} />
+            <Field label="Line 2" value={f.locLine2} onChange={e => set({ locLine2: e.target.value })} />
+            {adding && <button className="editor-btn" onClick={() => setAdding(false)}>Done</button>}
+          </div>
+        )}
+        <button className="border-0 bg-transparent text-left text-[11px]" onClick={() => setAdding(true)}>+ Add location</button>
+      </div>
+      <div className="editor-section-title mt-6">Remittance</div>
+      <Field label="Remittance Email" type="email" value={f.remitEmail} onChange={e => set({ remitEmail: e.target.value })} />
+    </section>
+  )
+}
