@@ -19,17 +19,18 @@ export function Topbar({ userEmail }: Props) {
   }
 
   return (
-    <header className="h-12 flex items-center justify-between px-5 border-b border-gray-200 bg-white flex-shrink-0">
+    <header className="h-12 flex items-center justify-between px-6 border-b border-cream-border bg-white flex-shrink-0">
       <div />
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         {userEmail && (
-          <span className="text-xs text-gray-500 hidden sm:block">{userEmail}</span>
+          <span className="text-[11px] text-stone-warm tracking-wide hidden sm:block">{userEmail}</span>
         )}
+        <div className="w-px h-3.5 bg-cream-border" />
         <button
           onClick={signOut}
-          className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-800 transition-colors"
+          className="flex items-center gap-1.5 text-[11px] text-stone-warm hover:text-charcoal-900 tracking-wide transition-colors"
         >
-          <LogOut className="w-3.5 h-3.5" />
+          <LogOut className="w-3 h-3" />
           Sign out
         </button>
       </div>

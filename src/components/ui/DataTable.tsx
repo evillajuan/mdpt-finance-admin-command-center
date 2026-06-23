@@ -63,16 +63,16 @@ export function DataTable<T extends { id?: unknown }>({
 
   return (
     <div className={cn('overflow-x-auto', className)}>
-      <table className="min-w-full divide-y divide-gray-200 text-sm">
+      <table className="min-w-full text-sm">
         <thead>
-          <tr className="bg-gray-50">
+          <tr className="border-b border-cream-border">
             {columns.map((col) => (
               <th
                 key={col.key}
                 scope="col"
                 className={cn(
-                  'px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap',
-                  col.sortable && 'cursor-pointer select-none hover:text-gray-800',
+                  'px-4 py-3 text-left text-[10px] font-semibold text-stone-warm uppercase tracking-[0.12em] whitespace-nowrap bg-cream',
+                  col.sortable && 'cursor-pointer select-none hover:text-charcoal-900',
                   col.headerClassName
                 )}
                 onClick={col.sortable ? () => handleSort(col.key) : undefined}
@@ -89,12 +89,12 @@ export function DataTable<T extends { id?: unknown }>({
             ))}
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-100">
+        <tbody className="bg-white divide-y divide-cream-border">
           {sorted.map((row, i) => (
             <tr
               key={String((row as Record<string, unknown>)[String(keyField)] ?? i)}
               className={cn(
-                'hover:bg-gray-50 transition-colors',
+                'hover:bg-cream transition-colors',
                 onRowClick && 'cursor-pointer'
               )}
               onClick={() => onRowClick?.(row)}
@@ -102,7 +102,7 @@ export function DataTable<T extends { id?: unknown }>({
               {columns.map((col) => (
                 <td
                   key={col.key}
-                  className={cn('px-3 py-2 text-gray-700 whitespace-nowrap', col.className)}
+                  className={cn('px-4 py-2.5 text-charcoal-800 whitespace-nowrap text-[13px]', col.className)}
                 >
                   {col.render
                     ? col.render(row)

@@ -8,7 +8,7 @@ interface Props {
 
 export function AppShell({ children, userEmail }: Props) {
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
+    <div className="flex h-screen overflow-hidden bg-cream">
       <Sidebar />
       <div className="flex flex-col flex-1 overflow-hidden">
         <Topbar userEmail={userEmail} />

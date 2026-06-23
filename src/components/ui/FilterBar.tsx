@@ -19,15 +19,15 @@ interface Props {
 
 export function FilterBar({ filters, values, onChange, className }: Props) {
   return (
-    <div className={cn('flex flex-wrap items-center gap-2 mb-4', className)}>
+    <div className={cn('flex flex-wrap items-center gap-2.5 mb-4', className)}>
       {filters.map((f) => (
         <div key={f.key} className="flex items-center gap-1.5">
-          <label className="text-xs text-gray-500 whitespace-nowrap">{f.label}</label>
+          <label className="text-[10px] font-medium text-stone-warm uppercase tracking-[0.12em] whitespace-nowrap">{f.label}</label>
           {f.type === 'select' ? (
             <select
               value={values[f.key] ?? ''}
               onChange={(e) => onChange(f.key, e.target.value)}
-              className="h-7 text-xs border border-gray-200 rounded px-2 bg-white text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-400"
+              className="h-7 text-xs border border-cream-border rounded px-2 bg-white text-charcoal-800 focus:outline-none focus:ring-1 focus:ring-gold/50 focus:border-gold/50 transition-colors"
             >
               <option value="">All</option>
               {f.options?.map((o) => (
@@ -40,7 +40,7 @@ export function FilterBar({ filters, values, onChange, className }: Props) {
               value={values[f.key] ?? ''}
               onChange={(e) => onChange(f.key, e.target.value)}
               placeholder={f.placeholder ?? `Filter ${f.label}`}
-              className="h-7 text-xs border border-gray-200 rounded px-2 bg-white text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-400"
+              className="h-7 text-xs border border-cream-border rounded px-2 bg-white text-charcoal-800 placeholder:text-stone-warm focus:outline-none focus:ring-1 focus:ring-gold/50 focus:border-gold/50 transition-colors"
             />
           )}
         </div>
@@ -48,9 +48,9 @@ export function FilterBar({ filters, values, onChange, className }: Props) {
       {Object.values(values).some(Boolean) && (
         <button
           onClick={() => filters.forEach((f) => onChange(f.key, ''))}
-          className="text-xs text-gray-400 hover:text-gray-600 underline"
+          className="text-[10px] text-stone-warm hover:text-charcoal-900 uppercase tracking-[0.12em] transition-colors"
         >
-          Clear
+          Clear filters
         </button>
       )}
     </div>

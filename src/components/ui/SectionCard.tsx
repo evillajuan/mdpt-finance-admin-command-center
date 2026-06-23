@@ -9,10 +9,10 @@ interface Props {
 
 export function SectionCard({ title, children, className, actions }: Props) {
   return (
-    <div className={cn('bg-white border border-gray-200 rounded-lg', className)}>
+    <div className={cn('bg-white border border-cream-border rounded-lg shadow-sm', className)}>
       {(title || actions) && (
-        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-          {title && <h2 className="text-sm font-semibold text-slate-800">{title}</h2>}
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-cream-border">
+          {title && <h2 className="text-xs font-semibold text-charcoal-700 uppercase tracking-[0.12em]">{title}</h2>}
           {actions && <div className="flex items-center gap-2">{actions}</div>}
         </div>
       )}
