@@ -32,6 +32,30 @@ export interface Client {
   default_work_state: string | null
   status: string | null
   notes: string | null
+  // Primary contact
+  primary_contact_name: string | null
+  primary_contact_title: string | null
+  primary_contact_email: string | null
+  primary_contact_phone: string | null
+  // Billing contact
+  billing_contact_name: string | null
+  billing_contact_title: string | null
+  billing_contact_email: string | null
+  billing_contact_phone: string | null
+}
+
+export interface ClientLocation {
+  id: string
+  created_at: string
+  client_id: string
+  location_type: string | null
+  label: string | null
+  address_line1: string | null
+  address_line2: string | null
+  city: string | null
+  state: string | null
+  zip: string | null
+  country: string | null
 }
 
 export interface InvoiceRecord {
