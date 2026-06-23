@@ -106,7 +106,8 @@ export default function ClientsClient({ initialClients }: Props) {
 
       setShowModal(false)
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to save')
+      const msg = err instanceof Error ? err.message : (err as { message?: string })?.message ?? JSON.stringify(err)
+      setError(msg)
     } finally {
       setSaving(false)
     }
